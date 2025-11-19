@@ -31,43 +31,59 @@ class Calculator {
     return this.value;
   }
 }
-const num = [1,2,3,4,5,6,7,8,9,0];
+const text = document.querySelector("input");
+const num = [1,2,3,4,5,6,7,8,9,".",0,"<"];
+const container = document.querySelector("#container");
 num.forEach((n)=>{
     const numberDiv = document.createElement("div");
     numberDiv.textContent = n;
-    numberDiv.addEventListener("click",()=>{
+    numberDiv.addEventListener("click",(e)=>{
         if(result){
             text.value = "";
             result = 0;
         }
+        if(text.value.includes('.')&&e.target.textContent=='.'){
+            return;
+        }
+        if(e.target.textContent == "<"){
+            text.value= text.value.slice(0,-1);
+            return;
+        }
         text.value+=numberDiv.textContent;
     })
-    document.body.appendChild(numberDiv);
+    container.appendChild(numberDiv);
 })
+
+const symbols = ["+","-","×","÷"]
+const btnDiv = document.createElement("div");
+btnDiv.id = "operation";
+
+symbols.forEach((symbol)=>{
+    const btn = document.createElement("div");
+    console.log(symbol)
+    btn.textContent = symbol;
+    btn.classList.add("operator");
+    btnDiv.appendChild(btn);
+})
+
+
 const calculator = new Calculator();
-const text = document.createElement("input");
-const equalBtn = document.createElement("button");
-const addBtn = document.createElement("button");
-addBtn.classList.add("operator");
-addBtn.textContent = "+";
-const subBtn = document.createElement("button");
-subBtn.classList.add("operator");
-subBtn.textContent = "-";
-const multiBtn = document.createElement("button");
-multiBtn.classList.add("operator");
-multiBtn.textContent = "×";
-const divBtn = document.createElement("button");
-divBtn.classList.add("operator");
-divBtn.textContent = "÷";
+const equalBtn = document.createElement("div");
+const resetBtn = document.createElement("div");
+resetBtn.textContent = "AC";
+btnDiv.appendChild(equalBtn);
+btnDiv.appendChild(resetBtn);
+document.body.appendChild(btnDiv);
+
 let operator = "";
 let result = 0;
-document.body.appendChild(addBtn);
-document.body.appendChild(subBtn);
-document.body.appendChild(multiBtn);
-document.body.appendChild(divBtn);
-document.body.appendChild(equalBtn);
-text.type = "text";
-document.body.appendChild(text);
+
+
+const div = document.querySelectorAll('div');
+div.forEach((elem)=>{
+    elem.classList.add("button");
+})
+
 document.addEventListener("DOMContentLoaded", () => {
   const operatorBtn = document.querySelectorAll(".operator");
   console.log(operatorBtn);
@@ -94,6 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
     text.value = calculator.getResult();
     operator = "";
   });
+  resetBtn.addEventListener("click",()=>{
+    text.value = "";
+    calculator.set(0);
+  })
 });
 const operate = (operator, number) => {
   switch (operator) {
